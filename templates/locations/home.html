@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+{% endblock %}
+
+
+{% block content %}
+	<h2>Where all the DC Redditors at?</h2>
+	<p>
+		Check out where other DC Redditors are drinking! If you'd like to join in, register or log in using the buttons
+		at the top right of the screen.
+	</p>
+
+	<p>
+		By using this, you should be fully aware that other Redditors can find out where you're at. Consider this a little "social experiment".
+		This was built out of boredom by <a href="http://reddit.com/user/ryanmcgrath">Ryan McGrath</a>; if you have questions or comments, feel free
+		to message him on Reddit.
+	</p>
+
+	<h2>Redditors around DC</h2>
+	<ul id="results">
+		{% for checkin in checkins.object_list %}
+			<li class="top_level">
+				<a href="/locations/{{ checkin.location.id }}/" class="go_location button">View</a>
+				<a href="/locations/{{ checkin.location.id }}/">
+					<span class="location_name">{{ checkin.location.name }}</span>
+					<ul>
+						<li><strong>{{ checkin.user.username }}</strong> checked in here {{ checkin.timestamp|timesince }} ago</li>
+					</ul>
+				</a>
+			</li>
+		{% endfor %}
+	</ul>
+
+	<ul id="pagination">
+		{% if checkins.has_previous %}
+			<li><a href="?page={{ results.previous_page_number }}">Previous Results</a></li>
+		{% endif %}
+		
+		{% if checkins.has_next %}
+			<li><a href="?page={{ results.previous_page_number }}">More Results</a></li>
+		{% endif %}
+	</ul>
+
+{% endblock %}

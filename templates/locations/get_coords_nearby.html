@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<style type="text/css">
+#add_location_submit {
+	margin: 10px auto;
+	padding: 8px 12px !important;
+}
+</style>
+
+<!-- 
+	Load this in case geoLocation isn't supported... we'll drop back to trying to match by IP address. :\ 
+	Yes, load this *now*, don't get fancy with some JS-appending solution. Mobile browsers blow, and blow moreso
+	when there's no GPS to begin with. We'll take the resource hit.
+-->
+<script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAAaTpZjip8OppqbtRhg6vhDhTp1xR-A-7MLZUGcs3iDfyOaBUtiRTos5hyCGDaGxeW2svzPD8IOHrMPg"></script>
+ 
+<script type="text/javascript">
+var _GPS = {
+	attempts: 0,
+
+	positionSuccess: function(x) {
+		document.getElementById("lat").value = x.coords.latitude;
+		document.getElementById("long").value = x.coords.longitude;
+
+		/* 
+			Try to force-submit the form after we've got our values; if it fails, hide the loading text
+			so the user is "prompted" to submit it. 
+		*/
+		try {
+			document.getElementById("bertform").submit();
+		} catch(e) {
+			document.getElementById("bert").style.display = "none";
+		}
+	}
+}
+
+_GPS.getLocation = function() {
+	++_GPS.attempts;
+
+	if(navigator && navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(_GPS.positionSuccess, function() { return; }, { enableHighAccuracy:true });
+	} else if(google.loader.ClientLocation.latitude && google.loader.ClientLocation.longitude) {
+
+		/* Little known trick - these get filled when you download jsapi, like we do above. Free geolocation, fairly reliable. ;D */
+		positionSuccess({
+			coords: {
+				latitude: google.loader.ClientLocation.latitude,
+				longitude: google.loader.ClientLocation.longitude
+			},
+		});
+
+	} else if(_GPS.attempts < 3) {
+		setTimeout(_GPS.getLocation, 1000);
+	} else {
+		alert("Your device doesn't seem to support GPS! We'll still let you add something, but please be as accurate as possible since we can't get your coordinates.");
+	}
+};
+</script>
+{% endblock %}
+
+
+{% block content %}
+<!-- 
+	If you complain about this stuff in a mobile environment that's targetting browsers
+	worse than IE6, you should just stop using the internet now. ;P
+-->
+<div style="text-align: center;">
+	{% if error %}
+		<div class="error">
+			<p>{{ error }}</p>
+		</div>
+	{% endif %}
+
+	<form id="bertform" method="post" action="/locations/nearby/">
+		{% csrf_token %}
+
+		<h2>Getting your current position...</h2>
+		<p>
+			This should automagically redirect you to nearby results. 
+		</p>
+
+		<p>
+			If it doesn't, please wait until the "loading..." text below disappears,
+			and then click the button below to force your browser to get results (<em>older phones may need to do this</em>).
+		</p>
+		
+		<input type="hidden" name="lat" id="lat" value="">
+		<input type="hidden" name="long" id="long" value="">
+		
+		<div id="button_center">
+			<input type="submit" value="Add This Location" id="add_location_submit" class="button large">
+		</div>
+
+		<div id="bert" style="margin-bottom: 10px;">
+			Loading...
+		</div>
+	</form>
+</div>
+{% endblock %}

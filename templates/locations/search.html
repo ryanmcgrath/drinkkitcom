@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<style type="text/css">
+#search_btn {
+	margin: 10px auto;
+	padding: 8px 12px !important;
+}
+</style>
+{% endblock %}
+
+
+{% block content %}
+	<form method="post" action="/locations/search/">
+		{% csrf_token %}
+
+		<h2>Find Locations in DC</h2>
+		<p>
+			<label for="location_name">Ex: Churchkey, Buffalo Billiards, Rocket Bar</label>
+			<input type="text" name="search_query" value="{{ search_query|default:"" }}">
+		</p>
+		
+		<div id="button_center">
+			<input type="submit" value="Find Locations" id="search_btn" class="button large">
+		</div>
+	</form>
+
+	{% if performed_search %}
+		{% if results.object_list %}
+			<h2>Results for {{ search_query }}</h2>
+	
+			<ul id="results">
+				{% for location in results.object_list %}
+					<li class="top_level">
+						<a href="/locations/{{ checkin.location.id }}/" class="go_location button">View</a>
+						<a href="/locations/{{ location.id }}/">
+							<span class="location_name">{{ location.name }}</span>
+							<ul>
+								<li><strong>Recent Checkins:</strong> {{ location.get_recent_checkins_count }}</li>
+								<li><strong>Address:</strong> {{ location.street_address|default:"No address set" }}</li>
+								<li><strong>Category:</strong> {{ location.category|default:"No category set" }}</li>
+							</ul>
+						</a>
+					</li>
+				{% endfor %}
+			</ul>
+			
+			<ul id="pagination">
+				{% if results.has_previous %}
+					<li><a href="?page={{ results.previous_page_number }}">Previous Results</a></li>
+				{% endif %}
+				
+				{% if results.has_next %}
+					<li><a href="?page={{ results.previous_page_number }}">More Results</a></li>
+				{% endif %}
+			</ul>
+		{% else %}
+			<h2>No Results for {{ search_query }}</h2>
+			<p>
+				No locations in the Drinkkit database match what you're looking for. If where you are isn't listed,
+				you should feel free to add it so other Redditors can find it!
+			</p>
+		{% endif %}
+	{% endif %}
+	
+{% endblock %}

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Drinkkit - Find other drinking Redditors! {% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />    
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	{% block extra_head %}{% endblock %}
+	<style type="text/css">
+		html { width: 100%; margin: 0; padding: 0; }
+
+		body {
+			width: 100%;
+			color: #555;
+			font-family:Helvetica, "Helvetica Neue", Arial, sans-serif;
+			height: 100%;
+		    padding: 0;
+			margin: 0;
+			background:#c5ccd3;
+			-webkit-font-smoothing: antialiased;
+		}
+		
+		ul {
+			list-style-type: none;
+			padding: 10px 12px;
+			margin: 0;
+		}
+
+		#title {
+			width: 100%;
+			position: relative;
+			background: #cee3f8;
+			background: -webkit-gradient(linear, left top, left bottom, from(#cee3f8), to(#a8c4e0));
+			padding: 7px 0 6px 0;
+			margin: 0;
+			font-size: 16px;
+			font-weight: bold;
+			color: #333;
+			border-bottom: 1px solid #7599bd;
+			text-align: center;
+		}
+		
+		#global_options {
+			width: 100%;
+			position: relative;
+			background: #cdcdcd;
+			background: -webkit-gradient(linear, left top, left bottom, from(#fafafa), to(#cdcdcd));
+			padding: 4px 0 6px;
+			font-size: 1.2em;
+			color: #444;
+			border-bottom: 1px solid #8f8f8f;
+		}
+		
+		#junk_in_trunk, #about {
+			width: 96%;
+			margin: 10px auto;
+			background-color: #fff;
+			-webkit-border-radius: 4px;
+			border: 1px solid #8f8f8f;
+		}
+		
+		.button {
+			background-color: #80A2C4;
+		 	border: 1px solid #517191;
+			background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#bfd0e0), to(#80a2c4));
+			-moz-border-radius: 6px;
+			-webkit-border-radius: 6px;
+			text-decoration: none;
+			color: #fff;
+			font-size: 11px;
+			padding: 3px 7px;
+		}
+		
+		.large {
+			font-size: 14px;
+			padding: 4px 10px;
+		}
+		
+		#about_button, #register_button, #login_button { position: absolute; top: 5px; }
+		#login_button { right: 10px; }
+		#about_button, #register_button { left: 10px; }
+		
+		#about { display: none; position: relative; }		
+		
+		#home_link, #nearby_link, #search_link, #find_link, #add_location {
+			background-color: #80A2C4;
+		 	border: 1px solid #517191;
+			background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#bfd0e0), to(#80a2c4));
+			-moz-border-radius: 6px;
+			-webkit-border-radius: 6px;
+			display: inline-block;
+			text-decoration: none;
+			color: #fff;
+			font-size: 12px;
+			font-weight: bold;
+			padding: 3px 7px;
+			margin-right: 5px;
+		}
+		
+		#home_link { margin-left: 10px; }
+		
+		h2 {
+			font-size: 18px;
+			/*color: #ff7041;*/
+			color: #6c7ca1;
+			margin: 2px;
+			padding: 8px;
+			background-color: #ebf3fc;
+			background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fafcfe), to(#ebf3fc));
+			border: 1px solid #c4dbf1;
+		}
+		
+		p {
+			font-size: 13px;
+			margin: 10px 0;
+			padding: 0 10px;
+		}
+		
+		label {
+			display: block;
+			font-weight: bold;
+			margin-bottom: 3px;
+		}
+
+		p input, select {
+			width: 97%;
+			padding: 5px;
+			font-size: 16px;
+			border: 1px solid #b2b2b2;
+			-webkit-border-radius: 4px;
+			color: #555;
+		}
+		
+		#button_center { text-align: center; }
+	
+/* Oh god I'm so tired... */
+.go_location {
+	width: 70px !important;
+	position: absolute;
+	top: 0px;
+	right: 10px;
+	color: #fff !important;
+	font-size: 14px !important;
+	font-weight: bold;
+	padding: 5px 12px !important;
+	text-align: center !important;
+	border: 1px solid #517191 !important;
+	-webkit-border-bottom-left-radius: 6px !important;
+	-webkit-border-bottom-right-radius: 6px !important;
+}
+
+.top_level {
+	margin-bottom: 10px;
+	position: relative;
+}
+
+#results li a, #results li a:visited {
+	border: 1px solid #c9c9c9;
+	background-color: #f9f9f9;
+	-webkit-border-radius: 2px;
+	padding: 10px;
+	display: block;
+	color: #555;
+	text-decoration: none;
+	padding-bottom: 3px;
+	margin-bottom: 5px;
+	width: 92%;
+}
+
+.location_name { font-weight: bold; color: #ff8070; }
+
+.top_level ul { padding: 5px 0 0 0; }
+.top_level li { margin-bottom: 5px;}
+
+
+	</style>
+	
+	<script type="text/javascript">
+		/* Meh, sure, why not */
+		var isEventSupported = (function(){
+	    	var TAGNAMES = {
+		    	'select':'input','change':'input',
+		      	'submit':'form','reset':'form',
+		      	'error':'img','load':'img','abort':'img'
+		    }
+		    
+			function isEventSupported(eventName) {
+		    	var el = document.createElement(TAGNAMES[eventName] || 'div');
+		      	eventName = 'on' + eventName;
+		      	
+				var isSupported = (eventName in el);
+		      	if(!isSupported) {
+		        	el.setAttribute(eventName, 'return;');
+		        	isSupported = typeof el[eventName] == 'function';
+		      	}
+		      
+				el = null;
+		      	return isSupported;
+    		}
+		    
+			return isEventSupported;
+	  	})();
+		
+		var bareddit = {			
+			toggleAbout: function() {
+				if(bareddit.about.style.display !== "block") {
+					this.innerHTML = "Close About";
+					bareddit.about.style.display = "block";
+				} else {
+					this.innerHTML = "About"
+					bareddit.about.style.display = "none";
+				}
+				return false;
+			}
+		};
+		
+		function whenReady() {
+			/* Fire this when the DOM is "ready", if it exists and we need it. */
+			if(typeof _GPS !== "undefined") _GPS.getLocation();
+			
+			bareddit.about = document.getElementById("about");
+			
+			/* 	Use the annoying event handler syntax in the hopes of hitting all odd mobile browsers.
+				touchstart events are faster in the browsers that support them, so fork for it */
+			if(isEventSupported('touchstart')) {
+				document.getElementById("about_button").ontouchstart = bareddit.toggleAbout;
+			} else {
+				document.getElementById("about_button").onclick = bareddit.toggleAbout;
+			}
+		}
+	</script>
+</head>
+<body onload="whenReady();">
+	<div id="title">
+		{% if not user.is_authenticated %}
+			<a href="/auth/" id="login_button" class="button">Login</a>
+			<a href="/register/" id="register_button" class="button">Register</a>
+		{% else %}
+			<a href="#" id="about_button" class="button">About</a>
+			<a href="/unauth/" id="login_button" class="button">Logout</a>
+		{% endif %}
+		drinkkit
+	</div>
+	<div id="global_options">
+		<!-- I, as a habit, throw out all notions of "semantic markup" in many mobile situations. In *my* mind, less nodes
+			on a page means less for the damn phone to process, and more room for me to be awesome.
+			
+			Your opinion may differ. I don't honestly care at the moment.
+			
+			- Ryan, 3:45AM
+		-->
+		<a href="/" id="home_link" class="button">Home</a>
+		<a href="/locations/nearby/" id="nearby_link" class="button">Nearby</a>
+		<a href="/locations/search/" id="search_link" class="button">Search</a>
+		{% if user.is_authenticated %}
+			<a href="/locations/add/" id="add_location" class="button">Add Location</a>
+		{% endif %}
+	</div>
+	
+	<div id="about">
+		<h2>What the hell is drinkkit?</h2>
+		<p>
+		    On October 30th, 2010, two figures are planning to hold some rallies in Washington DC. Much of this was spurred on by Reddit.com.
+		    Washington DC has its own awesome sauce group of Redditors, and we happen to know all the appropriately awesome bars. This is an app
+		    for smartphones that lets Reddit users "check in" to bars and places in DC during the rally, much like Foursquare or Gowalla.
+		</p>
+
+		<p>
+		    The difference is that this is limited to <strong>just Redditors</strong>. If you check out venues here, you're guaranteed to find a 
+		    Redditor hanging out there if you drop by. Redditors can also leave tips on venues for other Redditors - hold a scavenger hunt, 
+		    awkward conversations and marriage proposals, whatever. To get started, just log in or register!
+		</p>
+		
+		<h2>Disclaimer</h2>
+		<p>
+			This is meant to be for fun, but you should always exercise caution when meeting people from the internet. In case you haven't noticed,
+			they're sometimes... odd. By using this app, you waive all rights to come back at me if you lack the common sense to be aware of your 
+			surroundings and not take candy from strangers.
+		</p>
+		
+		<p>
+			This app is in no way affiliated with Reddit.com, Conde Nast, Wired, or any of the DC locations listed on here. We just like beer.
+		</p>
+	</div>
+	
+	<div id="junk_in_trunk">
+	{% block content %}{% endblock %}
+	<div> 
+</body>
+</html>

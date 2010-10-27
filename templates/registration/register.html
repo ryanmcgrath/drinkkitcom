@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h2>Create an account</h2>
+
+	<form action="/register/" method="post">
+    	{% csrf_token %}  
+		{{ form.as_p }}
+      	
+		<div id="button_center">
+			<input type="submit" value="Create Your Drinkkit Account" class="button large" style="margin-bottom: 10px;">
+		</div>
+	</form>
+{% endblock %}

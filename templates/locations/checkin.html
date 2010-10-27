@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+{% endblock %}
+
+{% block content %}
+	<h2>Checkin To: {{ location.name }}</h2>
+	<p>
+		The following two questions are optional, but helpful
+		if you want to be found by other Redditors. If you don't want to answer them, just hit the checkin button below.
+	</p>
+
+	<form method="post" action="/locations/{{ location.id }}/checkin/">
+		{% csrf_token %}
+
+		<h2>How long do you think you'll be here?</h2>
+		<p>
+			<label for="estimated_time_here">Ex: 2 hours, until the sun rises</label>
+			<input type="text" name="estimated_time_here" value="">
+		</p>
+
+		<h2>How can other Redditors identify you?</h2>
+		<p>
+			<label for="identify_by">Ex: At the bar, wearing peace sign earings</label>
+			<input type="text" name="identify_by" value="">
+		</p>
+
+		<div id="button_center" style="margin-bottom: 14px;">
+			<input type="submit" value="Check In Here!" class="button large">
+		</div>
+	</form>
+{% endblock %}

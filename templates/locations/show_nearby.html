@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<style type="text/css">
+#search_btn {
+	margin: 10px auto;
+	padding: 8px 12px !important;
+}
+</style>
+{% endblock %}
+
+
+{% block content %}	
+	{% if nearby %}
+	<h2>Nearby you right now</h2>
+	<ul id="results">
+		{% for location in nearby %}
+			<li class="top_level">
+				<a href="/locations/{{ checkin.location.id }}/" class="go_location button">View</a>
+				<a href="/locations/{{ location.id }}/">
+					<span class="location_name">{{ location.name }}</span>
+					<ul>
+						<li><strong>Recent Checkins:</strong> {{ location.get_recent_checkins_count }}</li>
+						<li><strong>Address:</strong> {{ location.street_address|default:"No address set" }}</li>
+						<li><strong>Category:</strong> {{ location.category|default:"No category set" }}</li>
+					</ul>
+				</a>
+			</li>
+		{% endfor %}
+	</ul>
+	{% else %}
+	<h2>All's quiet on the Eastern Front :(</h2>
+	<p>
+		We couldn't find anything going on near you. The GPS in your device might not be accurate enough for this feature, or we
+		may be experiencing some difficulty. If you think it's the former (you know your device better than I do (that's what she said)),
+		please feel free to retry this feature in a few minutes.
+	</p>
+
+	<p>
+		The third option, of course, is that it's very possible nobody's out and about. They are Redditors, after all. ;)
+	</p>
+	{% endif %}
+
+{% endblock %}

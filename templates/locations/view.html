@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+	<style type="text/css">
+		#map { 
+			margin: 10px auto;
+			width: 98%;
+			height: 300px;
+		}
+
+		#bert { text-align: center; }
+
+		#tip_body {
+			display: block;
+			padding: 3px;
+			width: 95%;
+			height: 100px;
+			border-color: #b2b2b2;
+			margin: 10px auto;
+			-webkit-border-radius: 2px;
+		}
+
+		#submit_tip { margin-bottom: 10px; }
+		
+		#tips li, #checkins li {
+			margin-bottom: 15px;
+			font-size: 13px;
+		}
+		
+		.comment_header {
+			display: block;
+			border-bottom: 1px dotted #555;
+			padding-bottom: 2px;
+			margin-bottom: 2px;
+		}
+		
+		#tips strong { font-size: 14px; }
+		
+		#checkins span strong { font-size: 14px; color: #ff8070;}
+		
+		#location_details { position: relative; }
+		.pointers { font-weight: bold; color: #666; }
+		
+		#checkin_here_link, #checked_in_already {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			-moz-border-radius: 4px;
+			-webkit-border-radius: 4px;
+			text-decoration: none;
+			color: #fff;
+			font-weight: bold;
+		}
+		
+		#checkin_here_link {
+			background-color: #ff4500;
+		 	border: 1px solid #ff4500;
+			background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ff9f7b), to(#ff4500));
+			font-size: 20px;
+			padding: 7px 12px;
+		}
+		
+		#checked_in_already {
+			background-color: #cdcdcd;
+		 	border: 1px solid #8f8f8f;
+			background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f2f2f2), to(#cdcdcd));
+			font-size: 14px;
+			padding: 7px 10px;
+			color: #888;
+		}
+		
+		#annotations { padding-bottom: 0px !important; }
+		
+		#annotations li {
+			margin-bottom: 10px;
+			font-size: 12px;
+		}
+
+		#annoations strong { display: block; }
+	</style>
+
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+
+	<script type="text/javascript">
+		var geocoder, map;
+		
+		function generateMap() {
+			geocoder = new google.maps.Geocoder();
+			var latlng = new google.maps.LatLng({{ location.geometry.x }}, {{ location.geometry.y }});
+		
+			var opts = {
+				zoom: 16,
+				center: latlng,
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+			};
+
+			document.getElementById("bad_browser_map").style.display = "none";	
+			map = new google.maps.Map(document.getElementById("map"), opts);
+				
+			{% if location.street_address %}
+				/* 
+					Since we happen to have an address stored, we'll geocode it instead of using the stored/reported
+					GPS coordinates, as that'll be more accurate overall. We can still use the GPS coordinates to center
+					the map ahead of time, though, which we do above (see: opts/center).
+				*/
+				geocoder.geocode({'address': "{{ location.address_for_geocode}},Washington,DC"}, function(results, status) {
+			    	if(status == google.maps.GeocoderStatus.OK) {
+						map.setCenter(results[0].geometry.location);
+			        	var marker = new google.maps.Marker({
+				            map: map, 
+				            position: results[0].geometry.location
+				        });
+			      	} else {
+			        	alert("Geocode was not successful for the following reason: " + status);
+			      	}
+			    });
+			{% else %}
+				var marker = new google.maps.Marker({
+					position: latlng,
+					map: map,
+					title: '{{ location.name }}'
+				});
+			{% endif %}
+		}
+	</script>
+{% endblock %}
+
+{% block content %}
+	<h2>{{ location.name }}</h2>
+	
+	<div id="location_details">
+		<ul id="annotations">
+			<li><strong>Category:</strong> {{ location.category|default:"Not Specified :(" }}</li>
+			<li><strong>Address:</strong> {{ location.street_address|default:"Not Specified :(" }}</li>
+		</ul>
+		
+		{% if user.is_authenticated %}
+			{% if allow_checkin %}
+				<a href="/locations/{{ location.id }}/checkin/" id="checkin_here_link">Check In Here</a>
+			{% else %}
+				<div id="checked_in_already">Already Checked In</div>
+			{% endif %}
+		{% endif %}
+	</div>
+	
+	<h2>Map of the area</h2>
+	<div id="map">
+		{% if location.street_address %}
+			<img id="bad_browser_map" src="http://maps.google.com/maps/api/staticmap?center={{ location.address_for_geocode}},Washington,DC&sensor=true&zoom=16&size=300x300">
+		{% else %}
+			<img id="bad_browser_map" src="http://maps.google.com/maps/api/staticmap?center={{ location.geometry.x }},{{ location.geometry.y }}&sensor=true&zoom=16&size=300x300">
+		{% endif %}
+	</div>
+
+	<script type="text/javascript">
+		try { generateMap(); } catch(e) { /* Bad browser, most likely. Oh well, they still got a static map. ;P */ }
+	</script>
+
+	<h2>Recently checked in here</h2>
+	{% if recent_checkins %}
+		<ul id="checkins">
+			{% for checkin in recent_checkins %}
+				<li>
+					<span class="comment_header"><strong>{{ checkin.user.username }}</strong> <em>{{ checkin.timestamp|timesince }} ago</em></span>
+					<span class="pointers">Can be identified by:</span> {{ checkin.identify_by|default:"Doesn't want to be found. :(" }}<br>
+					<span class="pointers">Estimated time spent here:</span> {{ checkin.estimated_time_here|default:"They're flying by the seat of their vintage pants (no idea)."}}
+				</li>
+			{% endfor %}
+		</ul>
+	{% else %}
+		<p class="none_yet">No checkins yet. You could be the first!</p>
+	{% endif %}
+	
+	{% if user.is_authenticated %}
+	<h2>Leave a Tip or Todo</h2>
+	<form action="/locations/{{ location.id }}/add_tip/" method="post" id="bert">
+		{% csrf_token %}
+
+		<textarea name="tip_body" id="tip_body"></textarea>
+		<input type="submit" value="Post Tip" id="submit_tip" class="button large">
+	</form>
+	{% endif %}
+
+	<h2>Tips &amp; Todos from Redditors</h2>
+	{% if location.tip_set.all %}
+		<ul id="tips">
+			{% for tip in location.tip_set.all %}
+			<li>
+				<span class="comment_header"><strong>{{ tip.user.username }}</strong> <em>{{ tip.timestamp|timesince }} ago</em></span>
+				{{ tip.tip }}
+			</li>
+			{% endfor %}
+		</ul>
+	{% else %}
+		<p class="none_yet">No tips yet. Be the first and add one!</p>
+	{% endif %}
+{% endblock %}

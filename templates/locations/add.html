@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<style type="text/css">
+#add_location_submit {
+	margin: 10px auto;
+	padding: 8px 12px !important;
+}
+</style>
+
+<!-- 
+	Load this in case geoLocation isn't supported... we'll drop back to trying to match by IP address. :\ 
+	Yes, load this *now*, don't get fancy with some JS-appending solution. Mobile browsers blow, and blow moreso
+	when there's no GPS to begin with. We'll take the resource hit.
+-->
+<script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAAaTpZjip8OppqbtRhg6vhDhTp1xR-A-7MLZUGcs3iDfyOaBUtiRTos5hyCGDaGxeW2svzPD8IOHrMPg"></script>
+ 
+<script type="text/javascript">
+var _GPS = {
+	attempts: 0,
+
+	positionSuccess: function(x) {
+		document.getElementById("lat").value = x.coords.latitude;
+		document.getElementById("long").value = x.coords.longitude;
+	}
+}
+
+_GPS.getLocation = function() {
+	++_GPS.attempts;
+
+	if(navigator && navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(_GPS.positionSuccess, function() { return; }, { enableHighAccuracy:true });
+	} else if(google.loader.ClientLocation.latitude && google.loader.ClientLocation.longitude) {
+
+		/* Little known trick - these get filled when you download jsapi, like we do above. Free geolocation, fairly reliable. ;D */
+		positionSuccess({
+			coords: {
+				latitude: google.loader.ClientLocation.latitude,
+				longitude: google.loader.ClientLocation.longitude
+			},
+		});
+
+	} else if(_GPS.attempts < 3) {
+		setTimeout(_GPS.getLocation, 1000);
+	} else {
+		alert("Your device doesn't seem to support GPS! We'll still let you add something, but please be as accurate as possible since we can't get your coordinates.");
+	}
+};
+</script>
+{% endblock %}
+
+
+{% block content %}
+	{% if error %}
+		<div class="error">
+			<p>{{ error }}</p>
+		</div>
+	{% endif %}
+
+	<form method="post" action="/locations/add/">
+		{% csrf_token %}
+
+		<h2>What's the name?</h2>
+		<p>
+			<label for="location_name">Ex: Churchkey, Buffalo Billiards, Fili's House</label>
+			<input type="text" name="location_name" value="">
+		</p>
+		
+		<h2>Know the street address?</h2>
+		<p>
+			<label for="street_address">Optional, but helps narrow it down if GPS isn't accurate enough.</label>
+			<input type="text" name="street_address" value="">
+		</p>
+		
+		<h2>What type of location is this?</h2>
+		
+		<p>
+			<label for="location_type">Optional, but useful for people to know.</label>
+			<select name="location_type">
+				<option value="">Choose a category</option>
+				{% for type in category_choices %}
+					<option value="{{ type.id }}">{{ type.name }}</option>
+				{% endfor %}
+			</select>
+		</p>
+		
+		<input type="hidden" name="lat" id="lat" value="">
+		<input type="hidden" name="long" id="long" value="">
+		
+		<div id="button_center">
+			<input type="submit" value="Add This Location" id="add_location_submit" class="button large">
+		</div>
+	</form>
+
+{% endblock %}
