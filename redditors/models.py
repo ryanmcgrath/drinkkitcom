@@ -23,7 +23,7 @@ class Location(models.Model):
 	name = models.CharField(max_length=200)
 	street_address = models.CharField(max_length=200, blank=True)
 	category = models.ForeignKey(LocationCategory, blank=True, null=True)
-	geometry = models.PointField(srid=4326)
+	geometry = models.PointField(srid=4326, blank=True, null=True)
 	objects = models.GeoManager()
 	
 	def __str__(self):
@@ -33,7 +33,6 @@ class Location(models.Model):
 		"""
 			Tally up how many checkins this location had in the past day.
 		"""
-		print self.checkin_set.filter(timestamp__gte = datetime.now() + timedelta(days=-1))
 		return self.checkin_set.filter(timestamp__gte = datetime.now() + timedelta(days=-1)).count()
 	
 	def address_for_geocode(self):

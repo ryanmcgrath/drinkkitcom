@@ -21,7 +21,7 @@
 		</p>
 		
 		<div id="button_center">
-			<input type="submit" value="Find Locations" id="search_btn" class="button large">
+			<input type="submit" value="Find Locations" id="search_btn" class="button large rounded_6px">
 		</div>
 	</form>
 
@@ -32,16 +32,15 @@
 			<ul id="results">
 				{% for location in results.object_list %}
 					<li class="top_level">
-						<a href="/locations/{{ checkin.location.id }}/" class="go_location button">View</a>
-						<a href="/locations/{{ location.id }}/">
-							<span class="location_name">{{ location.name }}</span>
-							<ul>
-								<li><strong>Recent Checkins:</strong> {{ location.get_recent_checkins_count }}</li>
-								<li><strong>Address:</strong> {{ location.street_address|default:"No address set" }}</li>
-								<li><strong>Category:</strong> {{ location.category|default:"No category set" }}</li>
-							</ul>
-						</a>
+						<h3>{{ location.name }}</h3>
+						<a href="/locations/{{ location.id }}/" class="anchored_action button orange_button">View Location</a>
+						<ul>
+							<li><strong>Recent Checkins:</strong> {{ location.get_recent_checkins_count }}</li>
+							<li><strong>Address:</strong> {{ location.street_address|default:"No address set" }}</li>
+							<li><strong>Category:</strong> {{ location.category|default:"No category set" }}</li>
+						</ul>
 					</li>
+
 				{% endfor %}
 			</ul>
 			

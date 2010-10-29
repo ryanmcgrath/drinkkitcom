@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+{% endblock %}
+
+
+{% block content %}
+	<h2>Where has {{ redditor.username }} been?</h2>
+
+	<ul id="results">
+		{% for checkin in redditor.checkin_set.all %}
+			<li class="top_level">
+				<h3>{{ checkin.location.name }} <span class="checkin_list_timestamp">{{ checkin.timestamp|timesince }} ago</span></h3>
+				<a href="/locations/{{ checkin.location.id }}/" class="anchored_action button orange_button">View Location</a>
+				<ul>
+					<li><strong>Was identifiable by:</strong> {{ checkin.identify_by }}</li>
+					<li><strong>Was there for:</strong> {{ checkin.estimated_time_here }}</li>
+				</ul>
+			</li>
+		{% endfor %}
+	</ul>
+{% endblock %}

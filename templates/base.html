@@ -13,11 +13,11 @@
 		body {
 			width: 100%;
 			color: #555;
-			font-family:Helvetica, "Helvetica Neue", Arial, sans-serif;
+			font-family: Helvetica, "Helvetica Neue", Arial, sans-serif;
 			height: 100%;
 		    padding: 0;
 			margin: 0;
-			background:#c5ccd3;
+			background: #c5ccd3;
 			-webkit-font-smoothing: antialiased;
 		}
 		
@@ -26,11 +26,28 @@
 			padding: 10px 12px;
 			margin: 0;
 		}
+		
+		.rounded_6px {
+			-moz-border-radius: 6px;
+			-webkit-border-radius: 6px;
+			-khtml-border-radius: 6px;
+			border-radius: 6px;
+		}
+		
+		.rounded_4px {
+			-moz-border-radius: 4px;
+			-webkit-border-radius: 4px;
+			-khtml-border-radius: 4px;
+			border-radius: 4px;			
+		}
+
+		#sandbox { clear: both; }
 
 		#title {
 			width: 100%;
 			position: relative;
 			background: #cee3f8;
+			background:-moz-linear-gradient(-90deg, #CEE3F8, #A8C4E0) repeat scroll 0 0 transparent;
 			background: -webkit-gradient(linear, left top, left bottom, from(#cee3f8), to(#a8c4e0));
 			padding: 7px 0 6px 0;
 			margin: 0;
@@ -45,6 +62,7 @@
 			width: 100%;
 			position: relative;
 			background: #cdcdcd;
+			background:-moz-linear-gradient(-90deg, #fafafa, #cdcdcd) repeat scroll 0 0 transparent;
 			background: -webkit-gradient(linear, left top, left bottom, from(#fafafa), to(#cdcdcd));
 			padding: 4px 0 6px;
 			font-size: 1.2em;
@@ -58,20 +76,27 @@
 			background-color: #fff;
 			-webkit-border-radius: 4px;
 			border: 1px solid #8f8f8f;
+			padding-bottom: 5px;
 		}
 		
 		.button {
 			background-color: #80A2C4;
 		 	border: 1px solid #517191;
+			background:-moz-linear-gradient(-90deg, #bfd0e0, #80a2c4) repeat scroll 0 0 transparent;
 			background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#bfd0e0), to(#80a2c4));
-			-moz-border-radius: 6px;
-			-webkit-border-radius: 6px;
 			text-decoration: none;
 			color: #fff;
 			font-size: 11px;
 			padding: 3px 7px;
 		}
 		
+		.orange_button {
+		 	border: 1px solid #ff4500;
+			background-color: #ff4500;
+			background:-moz-linear-gradient(-90deg, #ff9f7b, #ff4500) repeat scroll 0 0 transparent;
+			background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ff9f7b), to(#ff4500));
+		}
+
 		.large {
 			font-size: 14px;
 			padding: 4px 10px;
@@ -86,9 +111,8 @@
 		#home_link, #nearby_link, #search_link, #find_link, #add_location {
 			background-color: #80A2C4;
 		 	border: 1px solid #517191;
+			background:-moz-linear-gradient(-90deg, #bfd0e0, #80a2c4) repeat scroll 0 0 transparent;
 			background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#bfd0e0), to(#80a2c4));
-			-moz-border-radius: 6px;
-			-webkit-border-radius: 6px;
 			display: inline-block;
 			text-decoration: none;
 			color: #fff;
@@ -102,11 +126,11 @@
 		
 		h2 {
 			font-size: 18px;
-			/*color: #ff7041;*/
 			color: #6c7ca1;
 			margin: 2px;
 			padding: 8px;
 			background-color: #ebf3fc;
+			background:-moz-linear-gradient(-90deg, #fafcfe, #ebf3fc) repeat scroll 0 0 transparent;
 			background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fafcfe), to(#ebf3fc));
 			border: 1px solid #c4dbf1;
 		}
@@ -133,47 +157,49 @@
 		}
 		
 		#button_center { text-align: center; }
-	
-/* Oh god I'm so tired... */
-.go_location {
-	width: 70px !important;
-	position: absolute;
-	top: 0px;
-	right: 10px;
-	color: #fff !important;
-	font-size: 14px !important;
-	font-weight: bold;
-	padding: 5px 12px !important;
-	text-align: center !important;
-	border: 1px solid #517191 !important;
-	-webkit-border-bottom-left-radius: 6px !important;
-	-webkit-border-bottom-right-radius: 6px !important;
-}
 
-.top_level {
-	margin-bottom: 10px;
-	position: relative;
-}
+		.top_level {
+			border: 1px solid #c4dbf1;
+			-webkit-border-radius: 2px;
+			-moz-border-radius: 2px;
+			border-radius: 2px;
+			float: left;
+			width: 99%;
+			padding-bottom: 5px;
+			margin-bottom: 10px;
+		}
 
-#results li a, #results li a:visited {
-	border: 1px solid #c9c9c9;
-	background-color: #f9f9f9;
-	-webkit-border-radius: 2px;
-	padding: 10px;
-	display: block;
-	color: #555;
-	text-decoration: none;
-	padding-bottom: 3px;
-	margin-bottom: 5px;
-	width: 92%;
-}
+		.top_level h3 {
+			background-color: #ebf3fc;
+			background:-moz-linear-gradient(-90deg, #fafcfe, #ebf3fc) repeat scroll 0 0 transparent;
+			background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fafcfe), to(#ebf3fc));
+			border-bottom: 1px solid #c4dbf1;
+			margin: 0;
+			padding: 5px;
+			font-size: 13px;
+			color: #6C7CA1;
+		}
 
-.location_name { font-weight: bold; color: #ff8070; }
+		.top_level ul { padding: 5px; font-size: 12px; }
+		.top_level ul li { margin-bottom: 3px !important; }
+		.checkin_list_timestamp { color: #555; font-weight: normal; float: right; }
+		#results li a, #results li a:visited { text-decoration: none; }
 
-.top_level ul { padding: 5px 0 0 0; }
-.top_level li { margin-bottom: 5px;}
-
-
+		.anchored_action {
+			float: right;
+			clear: right;
+			margin: 5px 5px 0 0;
+			width: auto !important;
+			color: #fff !important;
+			font-size: 12px !important;
+			font-weight: bold;
+			padding: 3px 9px !important;
+			text-align: center !important;
+			-moz-border-radius: 6px;
+			-webkit-border-radius: 6px;
+			border-radius: 6px;
+			min-width: 100px;
+		}
 	</style>
 	
 	<script type="text/javascript">
@@ -220,13 +246,16 @@
 			if(typeof _GPS !== "undefined") _GPS.getLocation();
 			
 			bareddit.about = document.getElementById("about");
+			bareddit.about_button = document.getElementById("about_button");
 			
 			/* 	Use the annoying event handler syntax in the hopes of hitting all odd mobile browsers.
 				touchstart events are faster in the browsers that support them, so fork for it */
-			if(isEventSupported('touchstart')) {
-				document.getElementById("about_button").ontouchstart = bareddit.toggleAbout;
-			} else {
-				document.getElementById("about_button").onclick = bareddit.toggleAbout;
+			if(bareddit.about_button) {
+				if(isEventSupported('touchstart')) {
+					bareddit.about_button.ontouchstart = bareddit.toggleAbout;
+				} else {
+					bareddit.about_button.onclick = bareddit.toggleAbout;
+				}
 			}
 		}
 	</script>
@@ -234,11 +263,11 @@
 <body onload="whenReady();">
 	<div id="title">
 		{% if not user.is_authenticated %}
-			<a href="/auth/" id="login_button" class="button">Login</a>
-			<a href="/register/" id="register_button" class="button">Register</a>
+			<a href="/auth/" id="login_button" class="button rounded_6px">Login</a>
+			<a href="/register/" id="register_button" class="button rounded_6px">Register</a>
 		{% else %}
-			<a href="#" id="about_button" class="button">About</a>
-			<a href="/unauth/" id="login_button" class="button">Logout</a>
+			<a href="#" id="about_button" class="button rounded_6px">About</a>
+			<a href="/unauth/" id="login_button" class="button rounded_6px">Logout</a>
 		{% endif %}
 		drinkkit
 	</div>
@@ -250,11 +279,11 @@
 			
 			- Ryan, 3:45AM
 		-->
-		<a href="/" id="home_link" class="button">Home</a>
-		<a href="/locations/nearby/" id="nearby_link" class="button">Nearby</a>
-		<a href="/locations/search/" id="search_link" class="button">Search</a>
+		<a href="/" id="home_link" class="button rounded_6px">Home</a>
+		<a href="/locations/nearby/" id="nearby_link" class="button rounded_6px">Nearby</a>
+		<a href="/locations/search/" id="search_link" class="button rounded_6px">Search</a>
 		{% if user.is_authenticated %}
-			<a href="/locations/add/" id="add_location" class="button">Add Location</a>
+			<a href="/locations/add/" id="add_location" class="button rounded_6px">Add Location</a>
 		{% endif %}
 	</div>
 	
@@ -287,5 +316,7 @@
 	<div id="junk_in_trunk">
 	{% block content %}{% endblock %}
 	<div> 
+
+	<div id="sandbox"></div>
 </body>
 </html>

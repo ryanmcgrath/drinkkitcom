@@ -43,29 +43,29 @@
 		
 		#checkin_here_link, #checked_in_already {
 			position: absolute;
-			top: 10px;
-			right: 10px;
+			top: 5px;
+			right: 8px;
 			-moz-border-radius: 4px;
 			-webkit-border-radius: 4px;
 			text-decoration: none;
 			color: #fff;
 			font-weight: bold;
+			padding: 3px 7px !important;
+			font-size: 12px;
 		}
-		
+
+		#checked_in_already { padding: 3px !important; font-size: 11px !important; top: 5px; /* I'm tired, hush */ }
+
 		#checkin_here_link {
 			background-color: #ff4500;
 		 	border: 1px solid #ff4500;
 			background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ff9f7b), to(#ff4500));
-			font-size: 20px;
-			padding: 7px 12px;
 		}
 		
 		#checked_in_already {
 			background-color: #cdcdcd;
 		 	border: 1px solid #8f8f8f;
 			background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f2f2f2), to(#cdcdcd));
-			font-size: 14px;
-			padding: 7px 10px;
 			color: #888;
 		}
 		
@@ -160,10 +160,13 @@
 	{% if recent_checkins %}
 		<ul id="checkins">
 			{% for checkin in recent_checkins %}
-				<li>
-					<span class="comment_header"><strong>{{ checkin.user.username }}</strong> <em>{{ checkin.timestamp|timesince }} ago</em></span>
-					<span class="pointers">Can be identified by:</span> {{ checkin.identify_by|default:"Doesn't want to be found. :(" }}<br>
-					<span class="pointers">Estimated time spent here:</span> {{ checkin.estimated_time_here|default:"They're flying by the seat of their vintage pants (no idea)."}}
+				<li class="top_level">
+					<h3>{{ checkin.user.username }} <span class="checkin_list_timestamp">{{ checkin.timestamp|timesince }} ago</span></h3>
+					<a href="/redditor/{{ checkin.user.username }}/" class="anchored_action button">View User</a>
+					<ul>
+						<li><strong>Identify by:</strong> {{ checkin.identify_by }}</li>
+						<li><strong>Should be there for:</strong> {{ checkin.estimated_time_here }}</li>
+					</ul>
 				</li>
 			{% endfor %}
 		</ul>
@@ -171,13 +174,15 @@
 		<p class="none_yet">No checkins yet. You could be the first!</p>
 	{% endif %}
 	
+	<div style="clear: both;"><!-- It's 5AM and I have better things to do with my time... like sleep. --></div>
+	
 	{% if user.is_authenticated %}
 	<h2>Leave a Tip or Todo</h2>
 	<form action="/locations/{{ location.id }}/add_tip/" method="post" id="bert">
 		{% csrf_token %}
 
 		<textarea name="tip_body" id="tip_body"></textarea>
-		<input type="submit" value="Post Tip" id="submit_tip" class="button large">
+		<input type="submit" value="Post Tip" id="submit_tip" class="button large rounded_6px">
 	</form>
 	{% endif %}
 

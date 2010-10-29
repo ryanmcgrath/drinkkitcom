@@ -5,7 +5,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',		
-	(r'^admin/', include(admin.site.urls)),
+	(r'^knux/', include(admin.site.urls)),
 	
 	# Viewing and adding tips/locations
 	(r'^locations/add/$', 'drinkkit.redditors.views.add_location'),
@@ -16,6 +16,9 @@ urlpatterns = patterns('',
 	(r'^locations/(?P<location_id>[a-zA-Z0-9_.-]+)/checkin/$', 'drinkkit.redditors.views.checkin_location'),
 	(r'^locations/(?P<location_id>[a-zA-Z0-9_.-]+)/$', 'drinkkit.redditors.views.view_location'),
 
+	# Query and see who's getting into what
+	(r'^redditor/(?P<redditor_name>[a-zA-Z0-9_.-]+)/$', 'drinkkit.redditors.views.view_redditor'),
+	
 	# Registration
 	(r'^register/$', 'drinkkit.redditors.views.register'),
 

@@ -8,7 +8,7 @@
 	<h2>Where all the DC Redditors at?</h2>
 	<p>
 		Check out where other DC Redditors are drinking! If you'd like to join in, register or log in using the buttons
-		at the top right of the screen.
+		at the top of the screen.
 	</p>
 
 	<p>
@@ -21,13 +21,14 @@
 	<ul id="results">
 		{% for checkin in checkins.object_list %}
 			<li class="top_level">
-				<a href="/locations/{{ checkin.location.id }}/" class="go_location button">View</a>
-				<a href="/locations/{{ checkin.location.id }}/">
-					<span class="location_name">{{ checkin.location.name }}</span>
-					<ul>
-						<li><strong>{{ checkin.user.username }}</strong> checked in here {{ checkin.timestamp|timesince }} ago</li>
-					</ul>
-				</a>
+				<h3>{{ checkin.user.username }} <span class="checkin_list_timestamp">{{ checkin.timestamp|timesince }} ago</span></h3>
+				<a href="/locations/{{ checkin.location.id }}/" class="anchored_action button orange_button">View Location</a>
+				<a href="/redditor/{{ checkin.user.username }}/" class="anchored_action button">View User</a>
+				<ul>
+					<li><strong>Checked in at:</strong> {{ checkin.location.name }}</li>
+					<li><strong>Identify by:</strong> {{ checkin.identify_by }}</li>
+					<li><strong>Should be there for:</strong> {{ checkin.estimated_time_here }}</li>
+				</ul>
 			</li>
 		{% endfor %}
 	</ul>
