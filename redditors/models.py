@@ -47,6 +47,9 @@ class Checkin(models.Model):
 	timestamp = models.DateTimeField(auto_now=True)
 	estimated_time_here = models.CharField(max_length=200, blank=True, null=True)
 	identify_by = models.CharField(max_length=200, blank=True, null=True)
+	
+	class Meta:
+		ordering = ('-timestamp',)
 
 class Tip(models.Model):
 	"""
